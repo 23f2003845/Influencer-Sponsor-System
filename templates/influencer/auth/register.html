@@ -1,0 +1,58 @@
+{% include 'layout/base.html' %} 
+
+{% block body %}
+
+
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+  <h2 class="mt-3 mb-3">Influencer Registration</h2>
+  <div class="card text-center" style="width: 45vw; padding: 10px;">
+    <form class="d-flex flex-column m-3" style="gap: 0.5rem;">
+      <div class="input-group flex-nowrap">
+        <input type="text" class="form-control" id="name"  placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
+      </div>
+      <div class="input-group flex-nowrap">
+        <input type="text" class="form-control" id="username"  placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+      </div>
+      <div class="input-group flex-nowrap">
+        <input type="password" class="form-control" id="password"  placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
+        <button class="input-group-text"  class="btn m-0 p-0" id="passwordToggle"><ion-icon id="passwordIcon"  name="eye-outline" style="font-size: 24px;"></ion-icon></button>
+      </div>
+      <div class="input-group flex-nowrap">
+        <textarea class="form-control" id="bio" maxlength="255" rows="5" style="resize: none;"  placeholder="Enter a Bio for your profile." aria-label="Bio" aria-describedby="addon-wrapping"></textarea>
+      </div>
+      
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+  const toggle = document.getElementById("passwordToggle");
+  const passwordIcon = document.getElementById("passwordIcon")
+  const passwordField = document.getElementById("password");
+
+
+  toggle.addEventListener("click", (e) => {
+
+    e.preventDefault()
+
+    let currentlyShowing = passwordIcon.getAttribute("name") === "eye-off-outline";
+
+    if (!currentlyShowing){
+      passwordField.setAttribute("type", "text");
+      passwordIcon.setAttribute("name", "eye-off-outline")
+    }else{
+      passwordField.setAttribute("type", "password");
+      passwordIcon.setAttribute("name", "eye-outline")
+    }
+  })
+
+
+</script>
+
+{% endblock %}
