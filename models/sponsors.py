@@ -1,4 +1,4 @@
-# from app import db
+
 from __main__ import db
 
 
@@ -8,4 +8,4 @@ class Sponsors(db.Model):
     name = db.Column(db.String(255), nullable=False)
     industry = db.Column(db.String(255), nullable=False)
     budget = db.Column(db.Integer, nullable=False)
-    campaigns = db.relationship("campaign", backref="sponsor")
+    campaigns = db.relationship("Campaign", backref="sponsor")

@@ -17,6 +17,7 @@ from models import influencers
 from models import campaigns
 from models import sponsors
 from models import advertisements
+from models import categories
 
 login_manager = LoginManager()
 login_manager.init_app(app)

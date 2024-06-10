@@ -1,4 +1,4 @@
-# from app import db
+
 from __main__ import db
 
 
@@ -8,7 +8,7 @@ class Advertisement(db.Model):
     influencer_id = db.Column(
         db.Integer, db.ForeignKey("influencer.id"), nullable=False
     )
-    campaign = db.Column(db.Integer, db.ForeignKey("campaign.id"), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey("campaign.id"), nullable=False)
     messages = db.Column(db.String(255), nullable=False)
     requirements = db.Column(db.String(255), nullable=False)
     payment_amount = db.Column(db.Integer, nullable=False)

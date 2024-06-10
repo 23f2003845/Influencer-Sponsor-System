@@ -1,4 +1,4 @@
-# from app import db
+
 from __main__ import db
 
 
@@ -11,6 +11,6 @@ class Campaign(db.Model):
     budget = db.Column(db.Integer, nullable=False)
     visibility = db.Column(db.String(10), default="private")
     goals = db.Column(db.Integer, nullable=False)
-    advertisements = db.relationship("advertisement", backref="campaign")
-    sponsor = db.Column(db.Integer, db.ForeignKey("sponsor.id"), nullable=False)
+    advertisements = db.relationship("Advertisement", backref="campaign")
+    sponsor_id = db.Column(db.Integer, db.ForeignKey("sponsor.id"), nullable=False)
     flagged = db.Column(db.Boolean, default=False)
