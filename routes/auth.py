@@ -3,6 +3,7 @@ from __main__ import app, db
 from models import categories as Categories
 from models import users as Users
 from models import influencers as Influencers
+from models import sponsors as Sponsors
 
 from flask import redirect, render_template, request
 from flask_bcrypt import Bcrypt
@@ -11,6 +12,68 @@ from flask_login import current_user, login_user
 bcrypt = Bcrypt(app)
 
 
+# Sponsor Auth routes
+@app.route("/sponsor/register", methods=["POST", "GET"])
+def sponsor_registration():
+    if current_user.is_authenticated:
+        return redirect("/")
+
+    if request.method == "POST":
+        name = request.form["name"]
+        username = request.form["username"]
+        password = bcrypt.generate_password_hash(request.form["password"])
+        industry = request.form["industry"]
+        budget = request.form["budget"]
+
+        if Users.Users.query.filter_by(username=username).first():
+            return render_template(
+                "sponsor/auth/register.html",
+                message="Username is already taken",
+            )
+
+        user = Users.Users(username=username, password=password, role="influencer")
+        db.session.add(user)
+        db.session.commit()
+
+        sponsor = Sponsors.Sponsors(
+            id=user.id, name=name, industry=industry, budget=budget
+        )
+        db.session.add(sponsor)
+        db.session.commit()
+
+        return redirect("/sponsor/login")
+
+    return render_template("sponsor/auth/register.html")
+
+
+@app.route("/sponsor/login", methods=["GET", "POST"])
+def sponsor_login():
+    if current_user.is_authenticated:
+        return redirect("/")
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        user = Users.Users.query.filter_by(username=username).first()
+
+        if not user:
+            return render_template(
+                "sponsor/auth/login.html", message="Username not found"
+            )
+
+        if not bcrypt.check_password_hash(user.password, password):
+            return render_template(
+                "sponsor/auth/login.html", message="Password is incorrect"
+            )
+
+        login_user(user)
+        return redirect("/")
+
+    return render_template("/sponsor/auth/login.html")
+
+
+# Influencer Auth Routes
 @app.route("/influencer/register", methods=["POST", "GET"])
 def influencer_registration():
     if current_user.is_authenticated:
@@ -66,7 +129,7 @@ def influencer_login():
 
         if not user:
             return render_template(
-                "/influencer/auth/login.html", message="Username not found"
+                "influencer/auth/login.html", message="Username not found"
             )
 
         if not bcrypt.check_password_hash(user.password, password):
@@ -80,6 +143,7 @@ def influencer_login():
     return render_template("/influencer/auth/login.html")
 
 
+# Create Category Api
 @app.route("/category/create/<string:category_name>")
 def create_category(category_name):
     if category_name == "":
