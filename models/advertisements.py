@@ -1,4 +1,3 @@
-
 from __main__ import db
 
 
@@ -13,3 +12,4 @@ class Advertisement(db.Model):
     requirements = db.Column(db.String(255), nullable=False)
     payment_amount = db.Column(db.Integer, nullable=False)
     flagged = db.Column(db.Boolean, default=False)
+    accepted = db.Column(db.Boolean, default=False)
