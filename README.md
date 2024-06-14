@@ -1,7 +1,7 @@
 ## TODOS
 
-- [ ] Add Category Model
-- [ ] Influencer Login Page
+- [x] Add Category Model
+- [x] Influencer Login Page
 - [ ] Influencer Dashboard
 - [ ] Influencer Search Page
 - [ ] Influencer Profile Page

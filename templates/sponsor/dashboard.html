@@ -1,0 +1,31 @@
+{% include 'layout/base.html' %} {% block body %}
+<section
+  style="height: 90vh;"
+  class="d-flex align-items-center justify-content-center"
+>
+  <div id="bento" class="text-center">
+    <div class="row">
+      <div
+        class="font-varela d-flex align-items-center justify-content-center col-6 border rounded-md fs-2 p-3"
+        style="flex-direction: column;"
+      >
+        <span class="font-bold"
+          >Total<br />
+          Advertisements:</span
+        >
+        {{ advertisements | length }}
+      </div>
+      <div
+        class="font-varela d-flex align-items-center justify-content-center col-6 border rounded-md fs-2 p-3"
+        style="flex-direction: column;"
+      >
+        <span class="font-bold"
+          >Total<br />
+          Campaigns:</span
+        >
+        {{ campaigns | length }}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

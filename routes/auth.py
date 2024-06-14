@@ -7,7 +7,7 @@ from models import sponsors as Sponsors
 
 from flask import redirect, render_template, request
 from flask_bcrypt import Bcrypt
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 bcrypt = Bcrypt(app)
 
@@ -31,7 +31,7 @@ def sponsor_registration():
                 message="Username is already taken",
             )
 
-        user = Users.Users(username=username, password=password, role="influencer")
+        user = Users.Users(username=username, password=password, role="sponsor")
         db.session.add(user)
         db.session.commit()
 
@@ -60,6 +60,11 @@ def sponsor_login():
         if not user:
             return render_template(
                 "sponsor/auth/login.html", message="Username not found"
+            )
+
+        if user.role != "sponsor":
+            return render_template(
+                "sponsor/auth/login.html", message="Sponsor not found"
             )
 
         if not bcrypt.check_password_hash(user.password, password):
@@ -132,6 +137,11 @@ def influencer_login():
                 "influencer/auth/login.html", message="Username not found"
             )
 
+        if user.role != "influencer":
+            return render_template(
+                "influencer/auth/login.html", message="Influencer not found"
+            )
+
         if not bcrypt.check_password_hash(user.password, password):
             return render_template(
                 "influencer/auth/login.html", message="Password is incorrect"
@@ -141,6 +151,15 @@ def influencer_login():
         return redirect("/")
 
     return render_template("/influencer/auth/login.html")
+
+
+# Logout route
+@app.route("/logout")
+def logout():
+    if current_user.is_authenticated:
+        logout_user()
+
+    return redirect("/")
 
 
 # Create Category Api
