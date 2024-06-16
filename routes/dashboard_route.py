@@ -16,6 +16,9 @@ def homepage():
         advertisements = [
             a for a in advertisements if a.campaign.sponsor_id == current_user.id
         ]
+
+        print(advertisements)
+
         campaigns = [
             a.campaign
             for a in advertisements

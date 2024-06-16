@@ -28,8 +28,9 @@ def load_user(user_id):
     return users.Users.query.get(user_id)
 
 
-from routes import auth
-from routes import dashboard
+from routes import auth_route
+from routes import dashboard_route
+from routes import advertisement_route
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -4,12 +4,6 @@
 .bootstrap-select {
   width: 100% !important;
 }
-
-#bento {
-  width: 60vw;
-  margin: auto;
-}
-
 .row {
   gap: 8px !important;
 }
@@ -34,3 +28,13 @@
 .font-varela {
   font-family: "Varela Round", sans-serif;
 }
+
+.h-full{
+  height: 90vh;
+}
+
+#bento {
+  width: 60vw;
+  margin: auto;
+}
+
