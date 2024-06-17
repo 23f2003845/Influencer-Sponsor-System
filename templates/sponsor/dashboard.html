@@ -14,6 +14,13 @@
           Advertisements:</span
         >
         {{ advertisements | length }}
+        <a
+          href="/advertisements/create"
+          class="mt-3 btn btn-primary d-flex align-items-center justify-content-center gap-1"
+        >
+          <ion-icon name="add-outline"></ion-icon>
+          Create new Advertisement
+        </a>
       </div>
       <div
         class="font-varela d-flex align-items-center justify-content-center col-6 border rounded-md fs-2 p-3"
@@ -24,6 +31,12 @@
           Campaigns:</span
         >
         {{ campaigns | length }}
+        <a
+          class="mt-3 btn btn-primary d-flex align-items-center justify-content-center gap-1"
+          href="/campaigns/create"
+        >
+          <ion-icon name="add-outline"></ion-icon>Create new Campaign
+        </a>
       </div>
     </div>
   </div>
