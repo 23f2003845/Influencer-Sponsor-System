@@ -59,3 +59,47 @@ def create_campaign():
             return redirect("/campaigns")
 
         return render_template("sponsor/campaigns/create.html", role="sponsor")
+
+    return render_template('')
+
+@app.route("/campaigns/<int:id>", methods=["GET", "POST"])
+def edit_campaign(id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if current_user.role == "sponsor":
+        campaign = Campaigns.Campaign.query.filter_by(id = id).first()
+
+        if not campaign:
+            return render_template("sponsor/campaigns/edit.html", role="sponsor", message="Advertisement not found")
+
+        if not campaign.sponsor_id == current_user.id:
+            return render_template("sponsor/campaigns/index.html", role="sponsor", message="You don't have enough permissions to edit the advertisement")
+
+        if request.method == "POST":
+            name = request.form['name']
+            description = request.form['description']
+            start_date = request.form['start-date']
+            end_date = request.form['end-date']
+            goals = request.form['goals']
+            budget = request.form['budget']
+            visibility = request.form['visibility']
+
+            date_format = '%Y-%m-%d'
+            start_date = datetime.strptime(start_date, date_format)
+            end_date = datetime.strptime(end_date, date_format)
+
+            campaign.name = name
+            campaign.description = description
+            campaign.start_date = start_date
+            campaign.end_date = end_date
+            campaign.goals = goals
+            campaign.budget = budget
+            campaign.visibility = visibility
+            db.session.commit()
+
+            return redirect("/campaigns")
+ 
+        return render_template("sponsor/campaigns/edit.html", role="sponsor",  campaign = campaign)
+
+    return render_template("/")

@@ -1,0 +1,109 @@
+{% extends "layout/base.html" %} {% block body %} {% if message %}
+<div class="alert alert-danger" role="alert">
+  {{ message }}
+</div>
+{% endif %}
+
+<div
+  class="d-flex flex-column justify-content-center align-items-center"
+  style="height: 100vh;"
+>
+  <h2 class="mt-3 mb-3">Edit a Campaign</h2>
+  <div class="card text-center" style="width: 35vw; padding: 10px;">
+    <form
+      action="/campaigns/{{campaign.id}}"
+      method="post"
+      class="d-flex flex-column m-3"
+      style="gap: 0.5rem;"
+    >
+      <div class="input-group flex-nowrap">
+        <input
+          type="text"
+          class="form-control"
+          value="{{ campaign.name }}"
+          name="name"
+          required
+          id="name"
+          placeholder="Name"
+          aria-label="Name"
+          aria-describedby="addon-wrapping"
+        />
+      </div>
+      <div class="input-group flex-nowrap">
+        <textarea
+          class="form-control"
+          required
+          name="description"
+          id="description"
+          placeholder="Description"
+          aria-label="Description"
+          rows="3"
+          style="resize: none;"
+          aria-describedby="addon-wrapping"
+          >{{ campaign.description }}</textarea
+        >
+      </div>
+      <div class="d-flex align-items-center justify-content-center gap-1">
+        <div
+          class="input-group flex-nowrap d-flex align-items-center justify-content-center"
+        >
+          <input class="form-control" required value="{{
+            campaign.start_date.strftime("%Y-%m-%d")
+          }}" id="start-date" name="start-date" type="date" aria-label="Start
+          Date" aria-describedby="addon-wrapping" />
+        </div>
+        -
+        <div class="input-group flex-nowrap">
+          <input placeholder="End Date" value="{{
+            campaign.end_date.strftime("%Y-%m-%d")
+          }}" type="date" class="form-control" required id="end-date"
+          name="end-date" aria-label="End Date"
+          aria-describedby="addon-wrapping" />
+        </div>
+      </div>
+      <div class="input-group flex-nowrap">
+        <input
+          type="number"
+          class="form-control"
+          required
+          value="{{campaign.budget}}"
+          id="budget"
+          name="budget"
+          placeholder="Budget"
+          aria-label="Budget"
+          aria-describedby="addon-wrapping"
+        />
+      </div>
+      <div class="input-group flex-nowrap">
+        <input
+          type="text"
+          class="form-control"
+          required
+          id="goals"
+          name="goals"
+          value="{{campaign.goals}}"
+          placeholder="Goals"
+          aria-label="Goals"
+          aria-describedby="addon-wrapping"
+        />
+      </div>
+      <div
+        class="input-group flex-nowrap gap-2 align-items-center justify-content-center"
+        style="width: 100%"
+      >
+        <span>Visibility: </span>
+        <select
+          class="selectpicker"
+          style="width: 60%"
+          name="visibility"
+          id="visibility"
+        >
+          <option value="private" {% if campaign.visibilty == 'private' %} selected="selected" {% endif %}>Private</option>
+          <option value="public" {% if campaign.visibilty == 'public' %} selected="selected" {% endif %}>Public</option>
+        </select>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
+  </div>
+</div>
+{% endblock %}
