@@ -1,0 +1,32 @@
+{% extends "layout/base.html" %} {% block body %}
+<table class="table p-2">
+  <thead>
+    <th scope="col" class="text-center">ID</th>
+    <th scope="col" class="text-center">Influencer Name</th>
+    <th scope="col" class="text-center">Influencer Username</th>
+    <th scope="col" class="text-center">Category</th>
+    <th scope="col" class="text-center">Bio</th>
+    <th scope="col"></th>
+  </thead>
+  {% for influencer in influencers %}
+  <tr>
+    <th scope="row" class="text-center">{{ loop.index }}</th>
+    <td class="text-center">{{ influencer.name }}</td>
+    <td class="text-center">@{{ influencer.username }}</td>
+    <td class="text-center text-capitalize">
+      {{ categories[influencer.category_id] }}
+    </td>
+    <td class="text-center text-truncate" style="max-width: 150px;">
+      {{ influencer.bio }}
+    </td>
+    <td class="text-center">
+      <a
+        href="/influencer/{{ influencer.username }}/profile"
+        class="btn btn-primary"
+        >Visit Profile</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
