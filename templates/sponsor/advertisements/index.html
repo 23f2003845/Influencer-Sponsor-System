@@ -1,4 +1,9 @@
-{% extends "layout/base.html" %} {% block body %}
+{% extends "layout/base.html" %} {% block body %} {% if message %}
+<div class="alert alert-danger" role="alert">
+  {{ message }}
+</div>
+{% endif %}
+
 <section id="advertisements" class="m-2">
   {% if not advertisements %}
   <div class="h-full d-flex align-items-center justify-content-center">
@@ -12,11 +17,11 @@
       <tr>
         <th scope="col" class="text-center">#</th>
         <th scope="col" class="text-center">Campaign Name</th>
-        <th scop="col" class="text-center">Influencer Name</th>
-        <th scop="col" class="text-center">Message</th>
-        <th scop="col" class="text-center">Requirements</th>
-        <th scop="col" class="text-center">Payment Amount</th>
-        <th scop="col" class="text-center">Status</th>
+        <th scope="col" class="text-center">Influencer Name</th>
+        <th scope="col" class="text-center">Message</th>
+        <th scope="col" class="text-center">Requirements</th>
+        <th scope="col" class="text-center">Payment Amount</th>
+        <th scope="col" class="text-center">Status</th>
         <th scope="col" class="text-center">Actions</th>
       </tr>
     </thead>
@@ -32,16 +37,22 @@
         <td class="text-center">{{ ad.payment_amount }}</td>
         <td class="text-center text-capitalize">{{ ad.status }}</td>
         <td class="text-center">
-          <div
-            class="d-flex align-items-center justify-content-center gap-1"
-          >
-          <a href="/advertisements/{{ad.id}}">
-            <ion-icon name="create-outline" style="font-size: 24px;" class="btn btn-outline-primary"></ion-icon> 
-          </a>
-          <a href="/advertisements/{{ad.id}}/delete">
-            <ion-icon name="trash-outline" style="font-size: 24px;" class="btn btn-outline-danger"></ion-icon> 
-          </a>
-        </div>
+          <div class="d-flex align-items-center justify-content-center gap-1">
+            <a href="/advertisements/{{ ad.id }}">
+              <ion-icon
+                name="create-outline"
+                style="font-size: 24px;"
+                class="btn btn-outline-primary"
+              ></ion-icon>
+            </a>
+            <a href="/advertisements/{{ ad.id }}/delete">
+              <ion-icon
+                name="trash-outline"
+                style="font-size: 24px;"
+                class="btn btn-outline-danger"
+              ></ion-icon>
+            </a>
+          </div>
         </td>
       </tr>
       {% endfor %}

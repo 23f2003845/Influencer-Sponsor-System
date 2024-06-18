@@ -54,3 +54,40 @@ def create_advertisement():
         return render_template("sponsor/advertisements/create.html", role="sponsor", influencers=influencers, campaigns=campaigns)
 
     return render_template("")
+
+@app.route("/advertisements/<int:id>", methods=["GET", "POST"])
+def edit_advertisements(id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if current_user.role == "sponsor":
+        influencers = Influencers.Influencer.query.all()
+        campaigns = Campaigns.Campaign.query.filter_by(sponsor_id = current_user.id).all()
+        advertisement = Advertisements.Advertisement.query.filter_by(id = id).first()
+
+        if not advertisement:
+            return render_template("sponsor/advertisements/edit.html", role="sponsor", message="Advertisement not found")
+
+        if not advertisement.campaign.sponsor_id == current_user.id:
+            return render_template("sponsor/advertisements/index.html", role="sponsor", message="You don't have enough permissions to edit the advertisement")
+
+        if request.method == "POST":
+            message = request.form['message']
+            requirements = request.form['requirements']
+            payment_amount = request.form['amount']
+            influencer_id = request.form['influencer']
+            campaign_id = request.form['campaign']
+
+            advertisement.messages = message
+            advertisement.requirements = requirements
+            advertisement.payment_amount = payment_amount
+            advertisement.influencer_id = influencer_id
+            advertisement.campaign_id = campaign_id
+
+            db.session.commit()
+
+            return redirect("/advertisements")
+ 
+        return render_template("sponsor/advertisements/edit.html", role="sponsor", influencers=influencers, campaigns = campaigns, advertisement = advertisement)
+
+    return render_template("/")

@@ -1,0 +1,110 @@
+{% extends "layout/base.html" %} {% block body %} {% if message %}
+<div class="alert alert-danger" role="alert">
+  {{ message }}
+</div>
+{% endif %}
+
+<div
+  class="d-flex flex-column justify-content-center align-items-center"
+  style="height: 100vh;"
+>
+  <h2 class="mt-3 mb-3">Edit Advertisement</h2>
+  <div class="card text-center" style="width: 35vw; padding: 10px;">
+    <form
+      action="/advertisements/{{ advertisement.id }}"
+      method="post"
+      class="d-flex flex-column m-3"
+      style="gap: 0.5rem;"
+    >
+      <div
+        class="input-group flex-nowrap gap-2 align-items-center justify-content-center"
+        style="width: 100%"
+      >
+        <span>Campaign: </span>
+        <select
+          class="selectpicker"
+          style="width: 60%"
+          data-live-search="true"
+          name="campaign"
+          id="campaign"
+        >
+          {% for campaign in campaigns %}
+          <option
+            value="{{ campaign.id }}"
+            {% if campaign.id == advertisement.campaign.id %}selected="selected"{% endif %}
+          >
+            {{ campaign.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div
+        class="input-group flex-nowrap align-items-center justify-content-center gap-2"
+        style="width: 100%"
+      >
+        <span>Influencer: </span>
+        <select
+          class="selectpicker"
+          style="width: 60%"
+          data-live-search="true"
+          name="influencer"
+          id="influencer"
+        >
+          {% for influencer in influencers %}
+          <option value="{{ influencer.id }}"
+            {% if influencer.id == advertisement.influencer.id %}selected="selected"{% endif %}
+          >{{ influencer.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="input-group flex-nowrap">
+        <textarea
+          class="form-control"
+          name="message"
+          required
+          id="message"
+          placeholder="Message"
+          aria-label="Message"
+          aria-describedby="addon-wrapping"
+          maxlength="255"
+          rows="3"
+          style="resize: none;"
+          >{{ advertisement.messages }}</textarea
+        >
+      </div>
+      <div class="input-group flex-nowrap">
+        <textarea
+          class="form-control"
+          name="requirements"
+          required
+          id="requirements"
+          placeholder="Requirements"
+          aria-label="Requirements"
+          aria-describedby="addon-wrapping"
+          maxlength="255"
+          rows="3"
+          style="resize: none;"
+          >{{ advertisement.requirements }}</textarea
+        >
+      </div>
+      <div class="input-group flex-nowrap">
+        <input
+          type="number"
+          class="form-control"
+          required
+          id="amount"
+          name="amount"
+          placeholder="Payment Amount"
+          aria-label="Amount"
+          aria-describedby="addon-wrapping"
+          value="{{ advertisement.payment_amount }}"
+        />
+      </div>
+
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
+  </div>
+</div>
+
+{% endblock %}

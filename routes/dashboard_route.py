@@ -17,13 +17,11 @@ def homepage():
             a for a in advertisements if a.campaign.sponsor_id == current_user.id
         ]
 
-        print(advertisements)
-
-        campaigns = [
+        campaigns = list(set([
             a.campaign
             for a in advertisements
             if a.campaign.sponsor_id == current_user.id
-        ]
+        ]))
         return render_template(
             "sponsor/dashboard.html",
             role="sponsor",
