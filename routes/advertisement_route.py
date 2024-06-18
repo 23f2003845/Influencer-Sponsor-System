@@ -16,8 +16,14 @@ def advertisements_index():
     advertisements = [
          a for a in advertisements if a.campaign.sponsor_id == current_user.id
     ]
+
+    message = None
+
+    if "message" in request.args:
+        message = request.args["message"]
+
     if current_user.role == "sponsor":
-        return render_template("sponsor/advertisements/index.html", role="sponsor", advertisements=advertisements)
+        return render_template("sponsor/advertisements/index.html", role="sponsor", advertisements=advertisements, message=message)
 
     return render_template("")
 
@@ -91,3 +97,23 @@ def edit_advertisements(id):
         return render_template("sponsor/advertisements/edit.html", role="sponsor", influencers=influencers, campaigns = campaigns, advertisement = advertisement)
 
     return render_template("/")
+
+
+@app.route("/advertisements/<int:id>/delete")
+def delete_advertisement(id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+    
+    if current_user.role == "sponsor":
+        advertisement = Advertisements.Advertisement.query.filter_by(id = id).first()
+
+        if not advertisement:
+            return redirect('/advertisements?message="Advertisement does not exist!"')
+        
+        if not advertisement.campaign.sponsor_id == current_user.id:
+            return redirect('/advertisements?message="Not enough permissions"')
+
+        db.session.delete(advertisement)
+        db.session.commit()
+
+        return redirect("/advertisements")
