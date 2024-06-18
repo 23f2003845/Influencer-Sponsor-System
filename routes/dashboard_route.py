@@ -1,6 +1,7 @@
 from __main__ import app
 
 from models import advertisements as Advertisements
+from models import campaigns as Campaigns
 
 from flask import redirect, render_template
 from flask_login import current_user
@@ -17,11 +18,9 @@ def homepage():
             a for a in advertisements if a.campaign.sponsor_id == current_user.id
         ]
 
-        campaigns = list(set([
-            a.campaign
-            for a in advertisements
-            if a.campaign.sponsor_id == current_user.id
-        ]))
+        campaigns = Campaigns.Campaign.query.all()
+
+
         return render_template(
             "sponsor/dashboard.html",
             role="sponsor",
