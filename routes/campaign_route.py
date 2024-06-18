@@ -6,6 +6,7 @@ from flask_login import current_user
 from datetime import datetime
 
 from models import campaigns as Campaigns
+from models import advertisements as Advertisements
 
 @app.route("/campaigns")
 def show_campaigns():
@@ -15,7 +16,11 @@ def show_campaigns():
     if current_user.role == "sponsor":
         campaigns = Campaigns.Campaign.query.filter_by(sponsor_id=current_user.id).all()
 
-        return render_template("sponsor/campaigns/index.html", role="sponsor", campaigns=campaigns)
+        message = None
+        if "message" in request.args:
+            message = request.args['message']
+
+        return render_template("sponsor/campaigns/index.html", role="sponsor", campaigns=campaigns, message=message)
 
     return render_template("")
 
@@ -103,3 +108,31 @@ def edit_campaign(id):
         return render_template("sponsor/campaigns/edit.html", role="sponsor",  campaign = campaign)
 
     return render_template("/")
+
+@app.route("/campaigns/<int:id>/delete")
+def delete_campaign(id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if current_user.role == "sponsor":
+        campaign = Campaigns.Campaign.query.filter_by(id = id).first()
+
+        if not campaign:
+            return redirect('/campaigns?message="Campaign does not exist!"')
+
+        if not campaign.sponsor_id == current_user.id:
+            return redirect('/campaigns?message="Permission denied"')
+
+
+        advertisements = Advertisements.Advertisement.query.filter_by(campaign_id = id).all()
+
+        for ad in advertisements:
+            db.session.delete(ad)
+            db.session.commit()
+
+        db.session.delete(campaign) 
+        db.session.commit()
+
+        return redirect('/campaigns')
+    
+    return render_template('')

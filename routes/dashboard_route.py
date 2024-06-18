@@ -18,7 +18,7 @@ def homepage():
             a for a in advertisements if a.campaign.sponsor_id == current_user.id
         ]
 
-        campaigns = Campaigns.Campaign.query.all()
+        campaigns = Campaigns.Campaign.query.filter_by(sponsor_id = current_user.id).all()
 
 
         return render_template(

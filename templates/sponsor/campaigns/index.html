@@ -1,4 +1,9 @@
-{% extends "layout/base.html" %} {% block body %}
+{% extends "layout/base.html" %} {% block body %} {% if message %}
+<div class="alert alert-danger" role="alert">
+  {{ message }}
+</div>
+{% endif %}
+
 <section id="campaigns" class="m-2">
   {% if not campaigns %}
   <div class="h-full d-flex align-items-center justify-content-center">
@@ -28,7 +33,9 @@
       <tr>
         <th class="text-center" scope="row">{{ loop.index }}</th>
         <td class="text-center">{{ campaign.name }}</td>
-        <td class="text-center">{{ campaign.description }}</td>
+        <td class="text-center text-truncate" style="max-width: 200px">
+          {{ campaign.description }}
+        </td>
         <td class="text-center">
           {{ campaign.start_date.strftime("%d %B, %Y") }}
         </td>
