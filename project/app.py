@@ -33,6 +33,7 @@ from routes import dashboard_route
 from routes import advertisement_route
 from routes import campaign_route
 from routes import search_route
+from routes import profile_route
 
 if __name__ == "__main__":
     app.run(debug=True)

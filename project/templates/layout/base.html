@@ -11,6 +11,8 @@
 
 
 
+
+
     }}" rel="stylesheet" />
 
     <!--bootstrap-->
@@ -89,5 +91,21 @@
     nomodule
     src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
   ></script>
+  <script>
+    function abbreviateNumber(number) {
+      // Handle negative numbers
+      if (number < 0) {
+        return "-" + abbreviateNumber(Math.abs(number));
+      }
+
+      if (number >= 1000000) {
+        return (number / 100000).toFixed(1) + "m"; // millions
+      } else if (number >= 10000) {
+        return (number / 1000).toFixed(1) + "k"; // thousands
+      } else {
+        return number;
+      }
+    }
+  </script>
   {% block script %}{% endblock %}
 </html>
