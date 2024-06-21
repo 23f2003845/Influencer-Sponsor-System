@@ -41,19 +41,20 @@
           style="border-right: 1px solid var(--bs-border-color-translucent); padding-right: 7px"
         >
           <span class="d-block fs-3 font-bold font-varela text-center">{{
-            successful_advertisement_count
+            successful_advertisement_count | length
           }}</span>
           Successful <br />
-          Advertisements
+          Advertisement{%if successful_advertisement_count|length >
+          1%}s{%endif%}
         </div>
         <div
           style="border-right: 1px solid var(--bs-border-color-translucent); padding-right: 7px"
           class="text-center"
         >
           <span class="d-block fs-3 font-bold font-varela text-center">{{
-            happy_clients_count
+            happy_clients_count | length
           }}</span
-          >Happy Clients
+          >Happy Client{%if happy_clients_count|length > 1%}s{%endif%}
         </div>
 
         <div
