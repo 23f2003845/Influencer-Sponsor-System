@@ -55,9 +55,11 @@ def create_advertisement():
 
             return redirect('/advertisements')
 
+        influencer = request.args['influencer'] if 'influencer' in request.args else None
+        print(influencer)
         influencers = Influencers.Influencer.query.all()
         campaigns = Campaigns.Campaign.query.filter_by(sponsor_id = current_user.id).all()
-        return render_template("sponsor/advertisements/create.html", role="sponsor", influencers=influencers, campaigns=campaigns)
+        return render_template("sponsor/advertisements/create.html", role="sponsor", influencers=influencers, campaigns=campaigns, hire_influencer=str(influencer))
 
     return render_template("")
 

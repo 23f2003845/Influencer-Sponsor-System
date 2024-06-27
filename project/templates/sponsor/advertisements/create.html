@@ -46,7 +46,11 @@
           id="influencer"
         >
           {% for influencer in influencers %}
-          <option value="{{ influencer.id }}">{{ influencer.name }}</option>
+          <option value="{{ influencer.id }}" 
+            {% if influencer.id|int == hire_influencer|int %}
+              selected
+            {% endif %}
+          >{{ influencer.name }}</option>
           {% endfor %}
         </select>
       </div>
