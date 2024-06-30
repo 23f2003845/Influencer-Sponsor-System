@@ -119,3 +119,59 @@ def delete_advertisement(id):
         db.session.commit()
 
         return redirect("/advertisements")
+        
+@app.route('/advertisements/requests')
+def advertisements_request():
+    if not current_user.is_authenticated:
+        return redirect("/influencer/login")
+
+    message = request.args.get('message')
+    
+    advertisements = Advertisements.Advertisement.query.filter(Advertisements.Advertisement.influencer_id==current_user.id).filter((Advertisements.Advertisement.status != 'accepted') | (Advertisements.Advertisement.status != 'rejected')).all()
+
+    return render_template("influencer/advertisements/requests.html", advertisements=advertisements, role="influencer", message=message)
+
+
+@app.route('/advertisement/<string:advertisement_id>/negotiate')
+def negotiate_by_influencer(advertisement_id):
+    if not current_user.is_authenticated:
+        return redirect('/')
+    
+    advertisement = Advertisements.Advertisement.query.filter_by(id=advertisement_id).first()
+
+    if not advertisement: 
+        return redirect('/advertisements/requests?message="No advertisement exist"')
+
+
+    if not advertisement.influencer_id == current_user.id:
+        return redirect('/advertisements/requests?message="You do not have enough permissions"')
+    
+    negotiatedAmount = request.args['negotiatedAmount']
+
+    advertisement.payment_amount = negotiatedAmount
+    advertisement.status = "Negotiated By Influencer" 
+
+    db.session.commit()
+
+    return redirect("/advertisements/requests")
+    
+
+@app.route('/advertisement/<string:advertisement_id>/reject')
+def rejected_by_influencer(advertisement_id):
+    if not current_user.is_authenticated:
+        return redirect('/')
+    
+    advertisement = Advertisements.Advertisement.query.filter_by(id=advertisement_id).first()
+
+    if not advertisement: 
+        return redirect('/advertisements/requests?message="No advertisement exist"')
+
+
+    if not advertisement.influencer_id == current_user.id:
+        return redirect('/advertisements/requests?message="You do not have enough permissions"')
+    
+    advertisement.status = "rejected" 
+
+    db.session.commit()
+
+    return redirect("/advertisements/requests")

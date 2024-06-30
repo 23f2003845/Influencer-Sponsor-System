@@ -1,1 +1,25 @@
-{% include 'layout/base.html' %}
+{% include 'layout/base.html' %} {% block body %}
+<section
+  style="height: 90vh"
+  class="d-flex align-items-center justify-content-center"
+>
+  <div
+    class="font-varela d-flex align-items-center justify-content-center col-6 border rounded-md fs-2 p-3"
+    style="flex-direction: column"
+  >
+    <span class="fs-1">Hello, {{influencer.name}}!</span>
+    <span class="mb-3">Welcome back</span>
+    <div class="d-flex justify-content-center align-items-center gap-2">
+      <a
+        href="/advertisements/requests"
+        class="font-sm btn btn-primary d-flex align-items-center justify-content-center gap-1"
+      >
+        View Advertisement Requests
+      </a>
+      <a href="/advertisements" class="btn-primary btn"
+        >View Your Advertisements</a
+      >
+    </div>
+  </div>
+</section>
+{% endblock %}

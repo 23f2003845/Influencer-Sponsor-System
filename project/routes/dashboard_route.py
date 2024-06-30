@@ -2,6 +2,7 @@ from __main__ import app
 
 from models import advertisements as Advertisements
 from models import campaigns as Campaigns
+from models import influencers as Influencers
 
 from flask import redirect, render_template
 from flask_login import current_user
@@ -28,4 +29,7 @@ def homepage():
             campaigns=campaigns,
         )
 
-    return render_template("influencer/dashboard.html", role="influencer")
+    influencer = Influencers.Influencer.query.filter_by(id=current_user.id).first()
+
+
+    return render_template("influencer/dashboard.html", role="influencer", influencer=influencer)
