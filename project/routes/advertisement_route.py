@@ -14,8 +14,12 @@ def advertisements_index():
 
     advertisements =  Advertisements.Advertisement.query.all()
     advertisements = [
-         a for a in advertisements if a.campaign.sponsor_id == current_user.id
+        a for a in advertisements if a.campaign.sponsor_id == current_user.id
     ]
+    pending_advertisements = [a for a in advertisements if a.status != "accepted" and a.status != "rejected" and not "Negotiated" in a.status]
+    rejected_advertisements = [a for a in advertisements if a.status == "rejected"]
+    accepted_advertisements = [a for a in advertisements if a.status == "accepted"]
+    review_negotiation_advertisements = [a for a in advertisements if "Negotiated" in a.status and "Influencer" in a.status]
 
     message = None
 
@@ -23,7 +27,7 @@ def advertisements_index():
         message = request.args["message"]
 
     if current_user.role == "sponsor":
-        return render_template("sponsor/advertisements/index.html", role="sponsor", advertisements=advertisements, message=message)
+        return render_template("sponsor/advertisements/index.html", role="sponsor", pending_advertisements=pending_advertisements, review_negotiation_advertisements=review_negotiation_advertisements, rejected_advertisements=rejected_advertisements, accepted_advertisements=accepted_advertisements,  message=message)
 
     return render_template("")
 
@@ -127,7 +131,7 @@ def advertisements_request():
 
     message = request.args.get('message')
     
-    advertisements = Advertisements.Advertisement.query.filter(Advertisements.Advertisement.influencer_id==current_user.id).filter((Advertisements.Advertisement.status != 'accepted') | (Advertisements.Advertisement.status != 'rejected')).all()
+    advertisements = Advertisements.Advertisement.query.filter(Advertisements.Advertisement.influencer_id==current_user.id).filter(Advertisements.Advertisement.status != 'accepted').filter(Advertisements.Advertisement.status != 'rejected').all()
 
     return render_template("influencer/advertisements/requests.html", advertisements=advertisements, role="influencer", message=message)
 
@@ -171,6 +175,27 @@ def rejected_by_influencer(advertisement_id):
         return redirect('/advertisements/requests?message="You do not have enough permissions"')
     
     advertisement.status = "rejected" 
+
+    db.session.commit()
+
+    return redirect("/advertisements/requests")
+    
+
+@app.route('/advertisement/<string:advertisement_id>/accept')
+def accepted_by_influencer(advertisement_id):
+    if not current_user.is_authenticated:
+        return redirect('/')
+    
+    advertisement = Advertisements.Advertisement.query.filter_by(id=advertisement_id).first()
+
+    if not advertisement: 
+        return redirect('/advertisements/requests?message="No advertisement exist"')
+
+
+    if not advertisement.influencer_id == current_user.id:
+        return redirect('/advertisements/requests?message="You do not have enough permissions"')
+    
+    advertisement.status = "accepted" 
 
     db.session.commit()
 

@@ -1,8 +1,7 @@
 {% extends "layout/base.html" %} {% block body %} {% if message %}
 <div class="alert alert-primary" role="alert">{{message}}</div>
 
-{% endif %}
-
+{% endif %} {% if advertisements|length != 0 %}
 <section id="requests" class="m-3">
   <table class="table table-striped">
     <tr>
@@ -32,17 +31,19 @@
         {{advertisement.status}}
       </td>
       <td class="d-flex align-items-center justify-content-center gap-1">
+        {% if advertisement.status != "Negotiated By Influencer" %}
         <div
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#negotiateModal"
+          data-bs-target="#negotiateModal{{advertisement.id}}"
         >
           Negotiate
         </div>
 
+        <!-- Negotiate Modal -->
         <div
           class="modal fade"
-          id="negotiateModal"
+          id="negotiateModal{{advertisement.id}}"
           tabindex="-1"
           role="dialog"
           aria-labelledby="modalTitleId"
@@ -78,16 +79,15 @@
                       type="number"
                       class="form-control"
                       name="negotiatedAmount"
-                      id="negotiatedAmount"
+                      id="negotiatedAmount{{advertisement.id}}"
                       aria-describedby="Amount for negotiation"
                       placeholder="Enter an amount"
                     />
 
                     <button
-                      id="negotiateAmountSubmit"
+                      id="negotiateAmountSubmit{{advertisement.id}}"
                       type="submit"
                       class="btn btn-primary"
-                      onclick="negotiateAmountSubmit('{{advertisement_id}}')"
                     >
                       Submit
                     </button>
@@ -110,14 +110,15 @@
         <div
           class="btn btn-danger"
           data-bs-toggle="modal"
-          data-bs-target="#rejectModal"
+          data-bs-target="#rejectModal{{advertisement.id}}"
         >
           Reject
         </div>
 
+        <!-- Reject Modal -->
         <div
           class="modal fade"
-          id="rejectModal"
+          id="rejectModal{{advertisement.id}}"
           tabindex="-1"
           role="dialog"
           aria-labelledby="Reject Advertisement"
@@ -164,24 +165,76 @@
           </div>
         </div>
 
-        <!-- Optional: Place to the bottom of scripts -->
-        <script>
-          const myModal = new bootstrap.Modal(
-            document.getElementById("modalId"),
-            options
-          );
-        </script>
+        <div
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#acceptModal{{advertisement.id}}"
+        >
+          Accept
+        </div>
+
+        <!-- Accept Modal -->
+        <div
+          class="modal fade"
+          id="acceptModal{{advertisement.id}}"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="Accept Advertisement"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal"
+            role="document"
+          >
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                  Accept The Request
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                We're so happy that you've accepted the request. Congratulations
+                on getting the advertisement!
+                <br /><br />
+                <b>Good Luck and Stay Motivated.</b>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <a
+                  href="/advertisement/{{advertisement.id}}/accept"
+                  class="btn btn-success"
+                  >Accept</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <span class="text-muted">Waiting for sponsor's reply</span>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
   </table>
 </section>
-
-{% endblock %} {% block script %}
-<script>
-  const negotiateAmount = new bootstrap.Modal(
-    document.getElementById("negotiateAmount"),
-    options
-  );
-</script>
-{% endblock %}
+{% else %}
+<div
+  class="d-flex align-items-center justify-content-center mt-16 fs-3 text-center"
+>
+  <span class="font-varela"
+    >Hey there!<br />There are no pending requests remaining.</span
+  >
+</div>
+{% endif %} {% endblock %}
