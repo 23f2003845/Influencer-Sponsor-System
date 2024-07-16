@@ -30,200 +30,204 @@
       <td class="text-center text-truncate text-capitalize">
         {{advertisement.status}}
       </td>
-      <td class="d-flex align-items-center justify-content-center gap-1">
-        {% if advertisement.status != "Negotiated By Influencer" %}
-        <div
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#negotiateModal{{advertisement.id}}"
-        >
-          Negotiate
-        </div>
-
-        <!-- Negotiate Modal -->
-        <div
-          class="modal fade"
-          id="negotiateModal{{advertisement.id}}"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="modalTitleId"
-          aria-hidden="true"
-        >
+      <td>
+        <div class="d-flex align-items-center justify-content-center gap-1">
+          {% if advertisement.status != "Negotiated By Influencer" %}
           <div
-            class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
-            role="document"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#negotiateModal{{advertisement.id}}"
           >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                  Propose a valid amount
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                Feel the price is not enough. Don't worry, you get to offer a
-                price and wait for the sponsor to check it out.
-                <div
-                  class="mb-3 mt-3 d-flex align-items-center justify-content-center gap-1"
-                >
-                  <form
-                    class="d-flex align-items-center justify-content-center gap-1"
-                    action="/advertisement/{{advertisement.id}}/negotiate"
-                  >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="negotiatedAmount"
-                      id="negotiatedAmount{{advertisement.id}}"
-                      aria-describedby="Amount for negotiation"
-                      placeholder="Enter an amount"
-                    />
+            Negotiate
+          </div>
 
-                    <button
-                      id="negotiateAmountSubmit{{advertisement.id}}"
-                      type="submit"
-                      class="btn btn-primary"
+          <!-- Negotiate Modal -->
+          <div
+            class="modal fade"
+            id="negotiateModal{{advertisement.id}}"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modalTitleId"
+            aria-hidden="true"
+          >
+            <div
+              class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+              role="document"
+            >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalTitleId">
+                    Propose a valid amount
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  Feel the price is not enough. Don't worry, you get to offer a
+                  price and wait for the sponsor to check it out.
+                  <div
+                    class="mb-3 mt-3 d-flex align-items-center justify-content-center gap-1"
+                  >
+                    <form
+                      class="d-flex align-items-center justify-content-center gap-1"
+                      action="/advertisement/{{advertisement.id}}/negotiate"
                     >
-                      Submit
-                    </button>
-                  </form>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="negotiatedAmount"
+                        id="negotiatedAmount{{advertisement.id}}"
+                        aria-describedby="Amount for negotiation"
+                        placeholder="Enter an amount"
+                      />
+
+                      <button
+                        id="negotiateAmountSubmit{{advertisement.id}}"
+                        type="submit"
+                        class="btn btn-primary"
+                      >
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
             </div>
           </div>
-        </div>
 
-        <div
-          class="btn btn-danger"
-          data-bs-toggle="modal"
-          data-bs-target="#rejectModal{{advertisement.id}}"
-        >
-          Reject
-        </div>
-
-        <!-- Reject Modal -->
-        <div
-          class="modal fade"
-          id="rejectModal{{advertisement.id}}"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="Reject Advertisement"
-          aria-hidden="true"
-        >
           <div
-            class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal"
-            role="document"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#rejectModal{{advertisement.id}}"
           >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                  Reject The Request
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                Don't feel the request is worth it. Feel free to reject it.
-                <br /><br />
-                <b
-                  >P.S. Before rejecting, give your negotiation powers a try.</b
-                >
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <a
-                  href="/advertisement/{{advertisement.id}}/reject"
-                  class="btn btn-danger"
-                  >Reject</a
-                >
-              </div>
-            </div>
+            Reject
           </div>
-        </div>
 
-        <div
-          class="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#acceptModal{{advertisement.id}}"
-        >
-          Accept
-        </div>
-
-        <!-- Accept Modal -->
-        <div
-          class="modal fade"
-          id="acceptModal{{advertisement.id}}"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="Accept Advertisement"
-          aria-hidden="true"
-        >
+          <!-- Reject Modal -->
           <div
-            class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal"
-            role="document"
+            class="modal fade"
+            id="rejectModal{{advertisement.id}}"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="Reject Advertisement"
+            aria-hidden="true"
           >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                  Accept The Request
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                We're so happy that you've accepted the request. Congratulations
-                on getting the advertisement!
-                <br /><br />
-                <b>Good Luck and Stay Motivated.</b>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <a
-                  href="/advertisement/{{advertisement.id}}/accept"
-                  class="btn btn-success"
-                  >Accept</a
-                >
+            <div
+              class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal"
+              role="document"
+            >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalTitleId">
+                    Reject The Request
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  Don't feel the request is worth it. Feel free to reject it.
+                  <br /><br />
+                  <b
+                    >P.S. Before rejecting, give your negotiation powers a
+                    try.</b
+                  >
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <a
+                    href="/advertisement/{{advertisement.id}}/reject"
+                    class="btn btn-danger"
+                    >Reject</a
+                  >
+                </div>
               </div>
             </div>
           </div>
+
+          <div
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#acceptModal{{advertisement.id}}"
+          >
+            Accept
+          </div>
+
+          <!-- Accept Modal -->
+          <div
+            class="modal fade"
+            id="acceptModal{{advertisement.id}}"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="Accept Advertisement"
+            aria-hidden="true"
+          >
+            <div
+              class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal"
+              role="document"
+            >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalTitleId">
+                    Accept The Request
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  We're so happy that you've accepted the request.
+                  Congratulations on getting the advertisement!
+                  <br /><br />
+                  <b>Good Luck and Stay Motivated.</b>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <a
+                    href="/advertisement/{{advertisement.id}}/accept"
+                    class="btn btn-success"
+                    >Accept</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% else %}
+          <span class="text-muted">Waiting for sponsor's reply</span>
+          {% endif %}
         </div>
-        {% else %}
-        <span class="text-muted">Waiting for sponsor's reply</span>
-        {% endif %}
       </td>
     </tr>
     {% endfor %}

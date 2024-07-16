@@ -74,4 +74,25 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 18px;
+  padding-bottom: 6px;
+  margin: 0px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.scroll-down-button > a > ion-icon {
+  margin: 0;
+}
+tr {
+  max-height: 50px;
+  min-height: 50px;
+  overflow: hidden;
+}
+
+td {
+  max-height: 50px;
+  overflow: auto;
 }
