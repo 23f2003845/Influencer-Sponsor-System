@@ -45,6 +45,7 @@
           name="influencer"
           id="influencer"
         >
+        <option value="0">None</option>
           {% for influencer in influencers %}
           <option value="{{ influencer.id }}" 
             {% if influencer.id|int == hire_influencer|int %}

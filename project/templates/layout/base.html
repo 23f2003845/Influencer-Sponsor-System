@@ -60,6 +60,7 @@
               {% endif %}
             </li>
           </ul>
+          {% if role == "sponsor" %}
           <form class="d-flex" action="/search">
             <input class="form-control me-2" type="search" placeholder="{% if
             role == "sponsor" %} Search Influencer {% endif %}"
@@ -68,6 +69,7 @@
               Search
             </button>
           </form>
+          {% endif %}
           <a class="mx-2 btn btn-outline-danger" href="/logout">Logout</a>
         </div>
       </div>

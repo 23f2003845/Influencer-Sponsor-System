@@ -33,7 +33,7 @@
         <tr>
           <th class="text-center" scope="row">{{ loop.index }}</th>
           <td class="text-center">{{ ad.campaign.name }}</td>
-          <td class="text-center">{{ ad.influencer.name }}</td>
+          <td class="text-center {% if not ad.influencer.name %} text-muted {% endif %}">{% if not ad.influencer.name %}Waiting for influencer's requests {% else %}{{ ad.influencer.name }}{% endif %}</td>
           <td class="text-center">{{ ad.messages }}</td>
           <td class="text-center">{{ ad.requirements }}</td>
           <td class="text-center">{{ ad.payment_amount }}</td>

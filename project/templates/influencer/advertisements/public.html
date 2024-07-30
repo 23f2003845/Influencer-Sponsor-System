@@ -1,0 +1,33 @@
+{% extends "layout/base.html" %}{% block body %}
+<section class="m-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">ID</th>
+        <th scope="col" class="text-center">Campaign Name</th>
+        <th scope="col" class="text-center">Messages</th>
+        <th scope="col" class="text-center">Requirements</th>
+        <th scope="col" class="text-center">Amount</th>
+        <th scope="col" class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for ad in advertisements %}
+          <tr>
+            <th scope="row" class="text-truncate text-center" style="max-width: 100px">{{loop.index}}</th>
+            <td class="text-center" style="max-width: 100px">{{ad.campaign.name}}</td>
+            <td class="text-center" style="max-width: 100px">{{ad.messages}}</td>
+            <td class="text-center" style="max-width: 100px">{{ad.requirements}}</td>
+            <td class="text-center" style="max-width: 100px">{{ad.payment_amount}}</td>
+            <td class="text-center" style="max-width: 200px">
+                <a href="/advertisements/apply/{{ad.id}}" class="btn btn-success">Apply</a>
+                <a href="/advertisements/negotiate/{{ad.id}}" class="btn btn-warning">Negotiate</a>
+            </td>
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+
+{% endblock %}

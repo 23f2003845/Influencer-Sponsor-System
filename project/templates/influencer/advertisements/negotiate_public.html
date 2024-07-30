@@ -1,0 +1,25 @@
+{% extends "layout/base.html" %} {% block body %}
+
+<section
+  class="m-3 d-flex align-items-center justify-content-center"
+  style="width: calc(100vw - 6px); height: 50vh"
+>
+  <form
+    method="post"
+    style="width: 40%; flex-direction: column"
+    class="d-flex align-items-center justify-content-center gap-3"
+  >
+    <label for="amount"
+      >Feel the amount is a bit less. Give you negotiation skills a test.
+    </label>
+    <input
+      class="form-control"
+      id="amount"
+      name="amount"
+      type="number"
+      placeholder="Enter amount proposed"
+    />
+    <input type="submit" value="Submit" class="btn btn-primary" />
+  </form>
+</section>
+{% endblock %}

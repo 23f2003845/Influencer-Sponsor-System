@@ -27,9 +27,7 @@ def advertisements_index():
     rejected_advertisements = [a for a in advertisements if a.status == "rejected"]
     accepted_advertisements = [a for a in advertisements if a.status == "accepted"]
     review_negotiation_advertisements = [
-        a
-        for a in advertisements
-        if "Negotiated" in a.status and "Influencer" in a.status
+        a for a in advertisements if "Influencer" in a.status
     ]
 
     message = None
@@ -63,6 +61,9 @@ def create_advertisement():
             payment_amount = request.form["amount"]
             influencer_id = request.form["influencer"]
             campaign_id = request.form["campaign"]
+
+            if int(influencer_id) == 0:
+                influencer_id = -1
 
             advertisement = Advertisements.Advertisement(
                 influencer_id=influencer_id,
@@ -237,7 +238,11 @@ def rejected_by_influencer(advertisement_id):
             '/advertisements/requests?message="You do not have enough permissions"'
         )
 
-    advertisement.status = "rejected"
+    if advertisement.campaign.visibility.lower() == "public":
+        advertisement.influencer_id = -1
+        advertisement.status = "pending"
+    else:
+        advertisement.status = "rejected"
 
     db.session.commit()
 
@@ -376,3 +381,74 @@ def show_influencers_advertisements():
         )
 
     return render_template("")
+
+
+@app.route("/public/advertisements")
+def show_public_advertisements():
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    campaigns = Campaigns.Campaign.query.filter_by(visibility="public").all()
+    advertisements = []
+
+    for c in campaigns:
+        ads = c.advertisements
+        for ad in ads:
+            if ad.status == "pending":
+                advertisements += [ad]
+
+    print(advertisements)
+    return render_template(
+        "influencer/advertisements/public.html",
+        role="influencer",
+        advertisements=advertisements,
+        user=current_user,
+    )
+
+
+@app.route("/advertisements/apply/<int:ad_id>")
+def apply_for_public_ad(ad_id):
+    influencer_id = current_user.id
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    advertisement = Advertisements.Advertisement.query.filter_by(id=ad_id).first()
+
+    if not advertisement:
+        return redirect("/")
+
+    if advertisement.status == "accepted" or advertisement.status == "flagged":
+        return redirect("/")
+
+    advertisement.influencer_id = influencer_id
+    advertisement.status = "Applied By Influencer"
+
+    db.session.commit()
+
+    return redirect("/advertisements/all")
+
+
+@app.route("/advertisements/negotiate/<int:advertisement_id>", methods=["GET", "POST"])
+def negotiate_public(advertisement_id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if request.method == "POST":
+        advertisement = Advertisements.Advertisement.query.filter_by(
+            id=advertisement_id
+        ).first()
+
+        if not advertisement:
+            return redirect("/")
+
+        advertisement.status = "Applied By Influencer"
+        advertisement.influencer_id = current_user.id
+        advertisement.payment_amount = request.form["amount"]
+
+        db.session.commit()
+
+        return redirect("/advertisements/all")
+
+    return render_template(
+        "influencer/advertisements/negotiate_public.html", role="influencer"
+    )
