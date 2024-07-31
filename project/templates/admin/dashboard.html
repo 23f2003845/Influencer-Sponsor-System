@@ -1,0 +1,28 @@
+{% extends "layout/base.html" %}
+
+{% block body %}
+<section id="admin_dashboard">
+    <div class="d-flex align-items-center justify-content-center"
+         style="width: 100vw; height: 93vh; ">
+        <div class="container p-0 m-0 gap-0 text-center" style="height: 75%">
+            <div class="row font-bold text-large" style="height: 51%;">
+                <div class="col card border-2  d-flex align-items-center justify-content-center"
+                     style="height: 98%">
+                    <p class="font-bolder text-xl">Total Campaigns</p><br> {{ campaign_count }}
+                </div>
+                <div class="col card border-2 d-flex align-items-center justify-content-center" style="height: 98%"><p
+                        class="font-bolder text-xl">Total Advertisements</p> <br> {{advertisement_count}}
+                </div>
+            </div>
+            <div class="row text-large font-bold" style="height:51%">
+                <div class="col card border-2 d-flex align-items-center justify-content-center" style="height: 98%"><p
+                        class="font-bolder text-xl">Total Sponsors</p><br>{{sponsor_count}}
+                </div>
+                <div class="col card border-2 d-flex align-items-center justify-content-center" style="height: 98%"><p
+                        class="font-bolder text-xl">Total Influencers</p><br>{{influencer_count}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

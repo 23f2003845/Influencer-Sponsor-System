@@ -34,6 +34,7 @@ from routes import advertisement_route
 from routes import campaign_route
 from routes import search_route
 from routes import profile_route
+from routes import admin_routes
 
 if __name__ == "__main__":
     app.run(debug=True)

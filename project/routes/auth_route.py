@@ -11,7 +11,6 @@ from flask_login import current_user, login_user, logout_user
 
 bcrypt = Bcrypt(app)
 
-
 # Sponsor Auth routes
 @app.route("/sponsor/register", methods=["POST", "GET"])
 def sponsor_registration():

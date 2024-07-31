@@ -52,11 +52,15 @@
             <li class="nav-item">
               {% if role == "sponsor" %}
               <a class="nav-link" href="/advertisements">Advertisements</a>
+              {% elif role == "admin" %}
+              <a class="nav-link" href="/admin/advertisements">View all advertisements</a>
               {% endif %}
             </li>
             <li class="nav-item">
               {% if role == "sponsor" %}
               <a class="nav-link" href="/campaigns">Campaigns</a>
+               {% elif role == "admin" %}
+                <a class="nav-link" href="/admin/campaigns">View all campaigns</a>
               {% endif %}
             </li>
           </ul>
