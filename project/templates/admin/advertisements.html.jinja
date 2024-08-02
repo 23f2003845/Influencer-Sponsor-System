@@ -1,0 +1,130 @@
+{% extends "layout/base.html" %}{% block body %}
+
+    {% if message %}
+        <div class="alert alert-dismissible fade show {{ 'alert-success' if success else 'alert-danger' }}"
+             role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <section class="m-3">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">Campaign Name</th>
+                <th scope="col" class="text-center">Messages</th>
+                <th scope="col" class="text-center">Requirements</th>
+                <th scope="col" class="text-center">Amount</th>
+                <th scope="col" class="text-center">Sponsor Name</th>
+                <th scope="col" class="text-center">Influencer Assigned</th>
+                <th scope="col" class="text-center">Flagged</th>
+                <th scope="col" class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ad in advertisements %}
+                <tr>
+                    <th scope="row" class="text-truncate text-center" style="max-width: 100px">{{ loop.index }}</th>
+                    <td class="text-center" style="max-width: 100px">{{ ad.campaign.name }}</td>
+                    <td class="text-center text-truncate" style="max-width: 100px">{{ ad.messages }}</td>
+                    <td class="text-center text-truncate" style="max-width: 100px">{{ ad.requirements }}</td>
+                    <td class="text-center" style="max-width: 100px">{{ ad.payment_amount }}</td>
+                    <td class="text-center text-capitalize" style="max-width: 100px">{{ ad.campaign.sponsor.name }}</td>
+                    <td class="text-center {{ 'text-muted' if not ad.influencer }} " style="max-width: 100px">{{ ad.influencer.name
+                if ad.influencer else "No influencer assigned" }}
+                    </td>
+                    <td class="text-center text-capitalize {{ 'text-danger' if ad.flagged }}" style="max-width: 100px">
+                        {{ 'flagged' if ad.flagged else 'Not
+                Flagged' }}
+                    </td>
+                    <td class="text-center" style="max-width: 200px">
+                        {% if not ad.flagged %}
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#flag{{ ad.id }}"
+                                    class="btn btn-outline-danger">
+                                <ion-icon name="{{ 'flag-outline' if not ad.flagged }}"></ion-icon>
+                            </button>
+
+
+                            <!--Modal-->
+                            <div class="modal fade" id="flag{{ ad.id }}" tabindex="-1"
+                                 aria-labelledby="flag-advertisement-modal"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Flag the
+                                                Advertisement</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Find this advertisement inappropriate?<p class="text-muted text-sm">
+
+                                            You can flag the advertisement, and we'll let the
+                                            sponsor and influencer know, that the advertisement needs to be reviewed.
+                                        </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <a href="/admin/advertisement/{{ ad.id }}/flag" type="button"
+                                               class="btn btn-danger">Flag
+                                                advertisement</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#unflag{{ ad.id }}"
+                                    class="btn btn-outline-primary" id="unflag-icon-cover">
+                                <svg id="unflag-icon" width="800px" height="800px" class="h-8 w-8" viewBox="0 0 56 56"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                            d="M 47.0665 46.5976 C 47.7931 47.3008 48.9415 47.3008 49.6213 46.5976 C 50.3476 45.9180 50.3476 44.7461 49.6213 44.0430 L 8.9102 3.3555 C 8.2071 2.6524 7.0352 2.6524 6.3321 3.3555 C 5.6524 4.0351 5.6524 5.2305 6.3321 5.9102 Z M 48.1915 38.3945 C 48.4727 37.9024 48.6368 37.2695 48.6368 36.4024 L 48.6368 12.5898 C 48.6368 11.3476 47.5587 10.5976 46.1993 10.5976 C 45.0509 10.5976 42.8946 11.6055 38.8634 11.6055 C 30.7774 11.6055 25.3868 7.4805 16.8790 7.3633 L 20.8634 11.3476 C 26.9805 12.3086 31.8790 15.1445 38.8634 15.1445 C 41.4181 15.1445 43.5274 14.8398 45.0978 14.3711 L 45.0978 35.3008 Z M 8.7931 53.3476 C 9.7774 53.3476 10.5743 52.5742 10.5743 51.5664 L 10.5743 38.5586 C 11.1603 38.3008 13.3634 37.4570 16.8087 37.4570 C 25.1056 37.4570 30.3087 41.3008 38.1603 41.6524 L 33.9181 37.4336 C 28.3868 36.4024 23.6290 33.9180 16.8087 33.9180 C 14.2305 33.9180 11.9102 34.2227 10.5743 34.7617 L 10.5743 14.3242 L 7.3165 11.0664 C 7.1290 11.4180 7.0118 11.8867 7.0118 12.5429 L 7.0118 51.5664 C 7.0118 52.5273 7.8321 53.3476 8.7931 53.3476 Z"></path>
+                                </svg>
+                            </button>
+
+
+                            <!--Modal-->
+                            <div class="modal fade" id="unflag{{ ad.id }}" tabindex="-1"
+                                 aria-labelledby="flag-advertisement-modal"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Flag the
+                                                Advertisement</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Has the sponsor fixed the advertisement?<p class="text-muted text-sm">
+
+                                            Feel that the advertisement is now ready to be unflagged and be on the site.
+                                            If yes, click the button below.
+                                        </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <a href="/admin/advertisement/{{ ad.id }}/unflag" type="button"
+                                               class="btn btn-outline-success">Unflag
+                                                advertisement</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+
+{% endblock %}

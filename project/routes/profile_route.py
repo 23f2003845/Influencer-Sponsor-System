@@ -19,7 +19,7 @@ def show_influencer_profile(username):
     user = Users.Users.query.filter_by(username=username).first()
     if not user:
         return render_template(
-            "influencer/profile.html", role=role, message="Influencer not found"
+            "influencer/profile.html.jinja", role=role, message="Influencer not found"
         )
 
     influencer = Influencers.Influencer.query.filter_by(id=user.id).first()
@@ -27,7 +27,7 @@ def show_influencer_profile(username):
 
     if not category:
         return render_template(
-            "influencer/profile.html", role=role, message="Influencer not found"
+            "influencer/profile.html.jinja", role=role, message="Influencer not found"
         )
 
     # recommended = (
@@ -45,13 +45,14 @@ def show_influencer_profile(username):
     # )
 
     recommended = db.session.query(Influencers.Influencer.id,
-                                    Users.Users.username, 
-                                    Influencers.Influencer.reach, 
-                                    Influencers.Influencer.category_id, 
-                                    Influencers.Influencer.name)\
-                            .join(Users.Users, Users.Users.id == Influencers.Influencer.id)
+                                   Users.Users.username,
+                                   Influencers.Influencer.reach,
+                                   Influencers.Influencer.category_id,
+                                   Influencers.Influencer.name) \
+        .join(Users.Users, Users.Users.id == Influencers.Influencer.id)
 
-    successful_advertisement_count = Advertisements.Advertisement.query.filter_by(influencer_id=user.id).filter_by(status="completed").all()
+    successful_advertisement_count = Advertisements.Advertisement.query.filter_by(influencer_id=user.id).filter_by(
+        status="completed").all()
 
     happy_clients_count = set()
 
@@ -60,7 +61,7 @@ def show_influencer_profile(username):
             happy_clients_count.add(ad.campaign.sponsor_id)
 
     return render_template(
-        "influencer/profile.html",
+        "influencer/profile.html.jinja",
         role=role,
         influencer=influencer,
         username=username,

@@ -44,13 +44,13 @@ def influencer_search():
         influencer
         for influencer in influencers
         if (keyword in influencer.name.lower())
-        or (keyword in influencer.bio.lower())
-        or (keyword in categories[influencer.category_id])
-        or (keyword in influencer.username)
+           or (keyword in influencer.bio.lower())
+           or (keyword in categories[influencer.category_id])
+           or (keyword in influencer.username)
     ]
 
     return render_template(
-        "sponsor/search.html",
+        "sponsor/search.html.jinja",
         role="sponsor",
         influencers=influencer_index,
         categories=categories,

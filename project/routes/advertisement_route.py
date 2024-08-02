@@ -13,7 +13,9 @@ def advertisements_index():
     if not current_user.is_authenticated:
         return redirect("/")
 
-    advertisements = Advertisements.Advertisement.query.all()
+    advertisements = Advertisements.Advertisement.query.filter_by(flagged=False).all()
+    flagged_advertisements = Advertisements.Advertisement.query.filter_by(flagged=True).all()
+
     advertisements = [
         a for a in advertisements if a.campaign.sponsor_id == current_user.id
     ]
@@ -21,8 +23,8 @@ def advertisements_index():
         a
         for a in advertisements
         if a.status != "accepted"
-        and a.status != "rejected"
-        and not "Influencer".lower() in a.status.lower()
+           and a.status != "rejected"
+           and not "Influencer".lower() in a.status.lower()
     ]
     rejected_advertisements = [a for a in advertisements if a.status == "rejected"]
     accepted_advertisements = [a for a in advertisements if a.status == "accepted"]
@@ -37,13 +39,14 @@ def advertisements_index():
 
     if current_user.role == "sponsor":
         return render_template(
-            "sponsor/advertisements/index.html",
+            "sponsor/advertisements/index.html.jinja",
             role="sponsor",
             pending_advertisements=pending_advertisements,
             review_negotiation_advertisements=review_negotiation_advertisements,
             rejected_advertisements=rejected_advertisements,
             accepted_advertisements=accepted_advertisements,
             message=message,
+            flagged_advertisements=flagged_advertisements,
         )
 
     return render_template("")
@@ -87,7 +90,7 @@ def create_advertisement():
         influencers = Influencers.Influencer.query.all()
         campaigns = Campaigns.Campaign.query.filter_by(sponsor_id=current_user.id).all()
         return render_template(
-            "sponsor/advertisements/create.html",
+            "sponsor/advertisements/create.html.jinja",
             role="sponsor",
             influencers=influencers,
             campaigns=campaigns,
@@ -109,14 +112,14 @@ def edit_advertisements(id):
 
         if not advertisement:
             return render_template(
-                "sponsor/advertisements/edit.html",
+                "sponsor/advertisements/edit.html.jinja",
                 role="sponsor",
                 message="Advertisement not found",
             )
 
         if not advertisement.campaign.sponsor_id == current_user.id:
             return render_template(
-                "sponsor/advertisements/index.html",
+                "sponsor/advertisements/index.html.jinja",
                 role="sponsor",
                 message="You don't have enough permissions to edit the advertisement",
             )
@@ -140,7 +143,7 @@ def edit_advertisements(id):
             return redirect("/advertisements")
 
         return render_template(
-            "sponsor/advertisements/edit.html",
+            "sponsor/advertisements/edit.html.jinja",
             role="sponsor",
             influencers=influencers,
             campaigns=campaigns,
@@ -180,14 +183,14 @@ def advertisements_request():
     advertisements = (
         Advertisements.Advertisement.query.filter(
             Advertisements.Advertisement.influencer_id == current_user.id
-        )
+        ).filter(Advertisements.Advertisement.flagged == False)
         .filter(Advertisements.Advertisement.status != "accepted")
         .filter(Advertisements.Advertisement.status != "rejected")
         .all()
     )
 
     return render_template(
-        "influencer/advertisements/requests.html",
+        "influencer/advertisements/requests.html.jinja",
         advertisements=advertisements,
         role="influencer",
         message=message,
@@ -201,7 +204,7 @@ def negotiate_by_influencer(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -228,7 +231,7 @@ def rejected_by_influencer(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -256,7 +259,7 @@ def accepted_by_influencer(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -281,7 +284,7 @@ def negotiate_by_sponsor(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -307,7 +310,7 @@ def rejected_by_sponsor(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -331,7 +334,7 @@ def accepted_by_sponsor(advertisement_id):
 
     advertisement = Advertisements.Advertisement.query.filter_by(
         id=advertisement_id
-    ).first()
+    ).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect('/advertisements/requests?message="No advertisement exist"')
@@ -354,6 +357,7 @@ def show_influencers_advertisements():
         return redirect("/")
 
     advertisements = Advertisements.Advertisement.query.all()
+
     advertisements = [a for a in advertisements if a.influencer_id == current_user.id]
     pending_advertisements = [
         a for a in advertisements if a.status != "accepted" and a.status != "rejected"
@@ -371,7 +375,7 @@ def show_influencers_advertisements():
 
     if current_user.role == "influencer":
         return render_template(
-            "influencer/advertisements/index.html",
+            "influencer/advertisements/index.html.jinja",
             role="influencer",
             pending_advertisements=pending_advertisements,
             review_negotiation_advertisements=review_negotiation_advertisements,
@@ -395,11 +399,12 @@ def show_public_advertisements():
         ads = c.advertisements
         for ad in ads:
             if ad.status == "pending":
-                advertisements += [ad]
+                if not ad.flagged:
+                    advertisements += [ad]
 
     print(advertisements)
     return render_template(
-        "influencer/advertisements/public.html",
+        "influencer/advertisements/public.html.jinja",
         role="influencer",
         advertisements=advertisements,
         user=current_user,
@@ -412,7 +417,7 @@ def apply_for_public_ad(ad_id):
     if not current_user.is_authenticated:
         return redirect("/")
 
-    advertisement = Advertisements.Advertisement.query.filter_by(id=ad_id).first()
+    advertisement = Advertisements.Advertisement.query.filter_by(id=ad_id).filter_by(flagged=False).first()
 
     if not advertisement:
         return redirect("/")
@@ -436,7 +441,7 @@ def negotiate_public(advertisement_id):
     if request.method == "POST":
         advertisement = Advertisements.Advertisement.query.filter_by(
             id=advertisement_id
-        ).first()
+        ).filter_by(flagged=False).first()
 
         if not advertisement:
             return redirect("/")
@@ -450,5 +455,5 @@ def negotiate_public(advertisement_id):
         return redirect("/advertisements/all")
 
     return render_template(
-        "influencer/advertisements/negotiate_public.html", role="influencer"
+        "influencer/advertisements/negotiate_public.html.jinja", role="influencer"
     )

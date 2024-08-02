@@ -8,6 +8,7 @@ from datetime import datetime
 from models import campaigns as Campaigns
 from models import advertisements as Advertisements
 
+
 @app.route("/campaigns")
 def show_campaigns():
     if not current_user.is_authenticated:
@@ -20,9 +21,11 @@ def show_campaigns():
         if "message" in request.args:
             message = request.args['message']
 
-        return render_template("sponsor/campaigns/index.html", role="sponsor", campaigns=campaigns, message=message)
+        return render_template("sponsor/campaigns/index.html.jinja", role="sponsor", campaigns=campaigns,
+                               message=message)
 
     return render_template("")
+
 
 @app.route('/campaigns/create', methods=['GET', 'POST'])
 def create_campaign():
@@ -44,7 +47,8 @@ def create_campaign():
             end_date = datetime.strptime(end_date, date_format)
 
             if start_date > end_date:
-                return render_template("sponsor/campaigns/create.html", role="sponsor", message="Select valid dates")
+                return render_template("sponsor/campaigns/create.html.jinja", role="sponsor",
+                                       message="Select valid dates")
 
             campaign = Campaigns.Campaign(
                 name=name,
@@ -54,7 +58,7 @@ def create_campaign():
                 goals=goals,
                 visibility=visibility,
                 budget=budget,
-                sponsor_id = current_user.id,
+                sponsor_id=current_user.id,
                 flagged=False
             )
 
@@ -63,23 +67,26 @@ def create_campaign():
 
             return redirect("/campaigns")
 
-        return render_template("sponsor/campaigns/create.html", role="sponsor")
+        return render_template("sponsor/campaigns/create.html.jinja", role="sponsor")
 
     return render_template('')
 
-@app.route("/campaigns/<int:id>", methods=["GET", "POST"])
-def edit_campaign(id):
+
+@app.route("/campaigns/<int:campaign_id>", methods=["GET", "POST"])
+def edit_campaign(campaign_id):
     if not current_user.is_authenticated:
         return redirect("/")
 
     if current_user.role == "sponsor":
-        campaign = Campaigns.Campaign.query.filter_by(id = id).first()
+        campaign = Campaigns.Campaign.query.filter_by(id=campaign_id).first()
 
         if not campaign:
-            return render_template("sponsor/campaigns/edit.html", role="sponsor", message="Advertisement not found")
+            return render_template("sponsor/campaigns/edit.html.jinja", role="sponsor",
+                                   message="Advertisement not found")
 
         if not campaign.sponsor_id == current_user.id:
-            return render_template("sponsor/campaigns/index.html", role="sponsor", message="You don't have enough permissions to edit the advertisement")
+            return render_template("sponsor/campaigns/index.html.jinja", role="sponsor",
+                                   message="You don't have enough permissions to edit the advertisement")
 
         if request.method == "POST":
             name = request.form['name']
@@ -104,10 +111,11 @@ def edit_campaign(id):
             db.session.commit()
 
             return redirect("/campaigns")
- 
-        return render_template("sponsor/campaigns/edit.html", role="sponsor",  campaign = campaign)
+
+        return render_template("sponsor/campaigns/edit.html.jinja", role="sponsor", campaign=campaign)
 
     return render_template("/")
+
 
 @app.route("/campaigns/<int:id>/delete")
 def delete_campaign(id):
@@ -115,7 +123,7 @@ def delete_campaign(id):
         return redirect("/")
 
     if current_user.role == "sponsor":
-        campaign = Campaigns.Campaign.query.filter_by(id = id).first()
+        campaign = Campaigns.Campaign.query.filter_by(id=id).first()
 
         if not campaign:
             return redirect('/campaigns?message="Campaign does not exist!"')
@@ -123,16 +131,15 @@ def delete_campaign(id):
         if not campaign.sponsor_id == current_user.id:
             return redirect('/campaigns?message="Permission denied"')
 
-
-        advertisements = Advertisements.Advertisement.query.filter_by(campaign_id = id).all()
+        advertisements = Advertisements.Advertisement.query.filter_by(campaign_id=id).all()
 
         for ad in advertisements:
             db.session.delete(ad)
             db.session.commit()
 
-        db.session.delete(campaign) 
+        db.session.delete(campaign)
         db.session.commit()
 
         return redirect('/campaigns')
-    
+
     return render_template('')

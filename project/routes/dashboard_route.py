@@ -23,7 +23,7 @@ def homepage():
         campaigns = Campaigns.Campaign.query.filter_by(sponsor_id=current_user.id).all()
 
         return render_template(
-            "sponsor/dashboard.html",
+            "sponsor/dashboard.html.jinja",
             role="sponsor",
             advertisements=advertisements,
             campaigns=campaigns,
@@ -42,10 +42,10 @@ def homepage():
         advertisement_count = len(advertisements)
         campaign_count = len(campaigns)
 
-        return render_template("admin/dashboard.html", role="admin", sponsor_count=sponsor_count,
+        return render_template("admin/dashboard.html.jinja", role="admin", sponsor_count=sponsor_count,
                                influencer_count=influencer_count, advertisement_count=advertisement_count,
                                campaign_count=campaign_count)
 
     influencer = Influencers.Influencer.query.filter_by(id=current_user.id).first()
 
-    return render_template("influencer/dashboard.html", role="influencer", influencer=influencer)
+    return render_template("influencer/dashboard.html.jinja", role="influencer", influencer=influencer)

@@ -11,6 +11,7 @@ from flask_login import current_user, login_user, logout_user
 
 bcrypt = Bcrypt(app)
 
+
 # Sponsor Auth routes
 @app.route("/sponsor/register", methods=["POST", "GET"])
 def sponsor_registration():
@@ -26,7 +27,7 @@ def sponsor_registration():
 
         if Users.Users.query.filter_by(username=username).first():
             return render_template(
-                "sponsor/auth/register.html",
+                "sponsor/auth/register.html.jinja",
                 message="Username is already taken",
             )
 
@@ -42,7 +43,7 @@ def sponsor_registration():
 
         return redirect("/sponsor/login")
 
-    return render_template("sponsor/auth/register.html")
+    return render_template("sponsor/auth/register.html.jinja")
 
 
 @app.route("/sponsor/login", methods=["GET", "POST"])
@@ -58,23 +59,23 @@ def sponsor_login():
 
         if not user:
             return render_template(
-                "sponsor/auth/login.html", message="Username not found"
+                "sponsor/auth/login.html.jinja", message="Username not found"
             )
 
         if user.role != "sponsor":
             return render_template(
-                "sponsor/auth/login.html", message="Sponsor not found"
+                "sponsor/auth/login.html.jinja", message="Sponsor not found"
             )
 
         if not bcrypt.check_password_hash(user.password, password):
             return render_template(
-                "sponsor/auth/login.html", message="Password is incorrect"
+                "sponsor/auth/login.html.jinja", message="Password is incorrect"
             )
 
         login_user(user)
         return redirect("/")
 
-    return render_template("/sponsor/auth/login.html")
+    return render_template("sponsor/auth/login.html.jinja")
 
 
 # Influencer Auth Routes
@@ -95,7 +96,7 @@ def influencer_registration():
 
         if Users.Users.query.filter_by(username=username).first():
             return render_template(
-                "influencer/auth/register.html",
+                "influencer/auth/register.html.jinja",
                 message="Username is already taken",
                 categories=categories,
             )
@@ -117,7 +118,7 @@ def influencer_registration():
 
         return redirect("/influencer/login")
 
-    return render_template("influencer/auth/register.html", categories=categories)
+    return render_template("influencer/auth/register.html.jinja", categories=categories)
 
 
 @app.route("/influencer/login", methods=["GET", "POST"])
@@ -133,23 +134,23 @@ def influencer_login():
 
         if not user:
             return render_template(
-                "influencer/auth/login.html", message="Username not found"
+                "influencer/auth/login.html.jinja", message="Username not found"
             )
 
         if user.role != "influencer":
             return render_template(
-                "influencer/auth/login.html", message="Influencer not found"
+                "influencer/auth/login.html.jinja", message="Influencer not found"
             )
 
         if not bcrypt.check_password_hash(user.password, password):
             return render_template(
-                "influencer/auth/login.html", message="Password is incorrect"
+                "influencer/auth/login.html.jinja", message="Password is incorrect"
             )
 
         login_user(user)
         return redirect("/")
 
-    return render_template("/influencer/auth/login.html")
+    return render_template("influencer/auth/login.html.jinja")
 
 
 # Logout route
