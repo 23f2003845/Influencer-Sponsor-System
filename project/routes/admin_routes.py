@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 
 from models import users as Users
 from models import advertisements as Advertisements
+from models import campaigns as Campaigns
 
 bcrypt = Bcrypt(app)
 
@@ -87,7 +88,66 @@ def unflag_advertisement(advertisement_id):
     if not advertisement:
         return redirect("/admin/advertisements?message=Advertisement%20does%20not%20exist")
 
+    if advertisement.campaign.flagged:
+        return redirect(
+            "/admin/advertisements?message=Unflag%20the%20Campaign%20before%20unflagging%20the%20advertisement")
+
     advertisement.flagged = False
     db.session.commit()
 
     return redirect("/admin/advertisements?message=Successfully%20unflagged%20advertisement&success=true")
+
+
+@app.route('/admin/campaigns')
+def show_campaigns_admin():
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if not current_user.role == "admin":
+        return redirect('/')
+
+    campaigns = Campaigns.Campaign.query.all()
+
+    return render_template("admin/campaigns.html.jinja", role="admin", campaigns=campaigns)
+
+
+@app.route('/admin/campaign/<int:campaign_id>/flag')
+def flag_campaign(campaign_id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if not current_user.role == "admin":
+        return redirect("/")
+
+    campaign = Campaigns.Campaign.query.filter_by(id=campaign_id).first()
+
+    if not campaign:
+        return redirect("/admin/campaigns?message=Campaign%20does%20not%20exist")
+
+    campaign.flagged = True
+    for ad in campaign.advertisements:
+        ad.flagged = True
+    db.session.commit()
+
+    return redirect("/admin/campaigns?message=Successfully%20flagged%20campaign&success=true")
+
+
+@app.route('/admin/campaign/<int:campaign_id>/unflag')
+def unflag_campaign(campaign_id):
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    if not current_user.role == "admin":
+        return redirect("/")
+
+    campaign = Campaigns.Campaign.query.filter_by(id=campaign_id).first()
+
+    if not campaign:
+        return redirect("/admin/campaigns?message=Campaign%20does%20not%20exist")
+
+    campaign.flagged = False
+    for ad in campaign.advertisements:
+        ad.flagged = False
+    db.session.commit()
+
+    return redirect("/admin/campaigns?message=Successfully%20unflagged%20campaign&success=true")
