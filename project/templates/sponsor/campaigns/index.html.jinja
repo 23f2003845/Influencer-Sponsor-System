@@ -1,74 +1,76 @@
 {% extends "layout/base.html" %} {% block body %} {% if message %}
-<div class="alert alert-danger" role="alert">
-  {{ message }}
-</div>
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
 {% endif %}
 
-<section id="campaigns" class="m-2">
-  {% if not campaigns %}
-  <div class="h-full d-flex align-items-center justify-content-center">
+    <section id="campaigns" class="m-2">
+        {% if not campaigns %}
+            <div class="h-full d-flex align-items-center justify-content-center">
     <span class="font-varela font-bold text-center fs-3"
-      >Nothing to display yet.</span
+    >Nothing to display yet.</span
     >
-  </div>
-  {% else %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col" class="text-center">#</th>
-        <th scope="col" class="text-center">Campaign Name</th>
-        <th scope="col" class="text-center">Description</th>
-        <th scope="col" class="text-center">From</th>
-        <th scope="col" class="text-center">To</th>
-        <th scope="col" class="text-center">Budget</th>
-        <th scope="col" class="text-center">Visibility</th>
-        <th scope="col" class="text-center">Goals</th>
-        <th scope="col" class="text-center">Sponsor</th>
-        <th scope="col" class="text-center">Actions</th>
-      </tr>
-    </thead>
+            </div>
+        {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Campaign Name</th>
+                    <th scope="col" class="text-center">Description</th>
+                    <th scope="col" class="text-center">From</th>
+                    <th scope="col" class="text-center">To</th>
+                    <th scope="col" class="text-center">Budget</th>
+                    <th scope="col" class="text-center">Visibility</th>
+                    <th scope="col" class="text-center">Goals</th>
+                    <th scope="col" class="text-center">Sponsor</th>
+                    <th scope="col" class="text-center">Flagged</th>
+                    <th scope="col" class="text-center">Actions</th>
+                </tr>
+                </thead>
 
-    <tbody>
-      {% for campaign in campaigns %}
-      <tr>
-        <th class="text-center" scope="row">{{ loop.index }}</th>
-        <td class="text-center">{{ campaign.name }}</td>
-        <td class="text-center text-truncate" style="max-width: 200px">
-          {{ campaign.description }}
-        </td>
-        <td class="text-center">
-          {{ campaign.start_date.strftime("%d %B, %Y") }}
-        </td>
-        <td class="text-center">
-          {{ campaign.end_date.strftime("%d %B, %Y") }}
-        </td>
-        <td class="text-center">{{ campaign.budget }}</td>
-        <td class="text-center text-capitalize">{{ campaign.visibility }}</td>
-        <td class="text-center">{{ campaign.goals }}</td>
-        <td class="text-center text-capitalize">{{ campaign.sponsor.name }}</td>
-        <td class="text-center">
-          <div class="d-flex align-items-center justify-content-center gap-1">
-            <a href="/campaigns/{{ campaign.id }}">
-              <ion-icon
-                name="create-outline"
-                style="font-size: 24px;"
-                class="btn btn-outline-primary"
-              ></ion-icon>
-            </a>
-            <a href="/campaigns/{{ campaign.id }}/delete">
-              <ion-icon
-                name="trash-outline"
-                style="font-size: 24px;"
-                class="btn btn-outline-danger"
-              ></ion-icon>
-            </a>
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+                <tbody>
+                {% for campaign in campaigns %}
+                    <tr>
+                        <th class="text-center" scope="row">{{ loop.index }}</th>
+                        <td class="text-center">{{ campaign.name }}</td>
+                        <td class="text-center text-truncate" style="max-width: 200px">
+                            {{ campaign.description }}
+                        </td>
+                        <td class="text-center">
+                            {{ campaign.start_date.strftime("%d %B, %Y") }}
+                        </td>
+                        <td class="text-center">
+                            {{ campaign.end_date.strftime("%d %B, %Y") }}
+                        </td>
+                        <td class="text-center">{{ campaign.budget }}</td>
+                        <td class="text-center text-capitalize">{{ campaign.visibility }}</td>
+                        <td class="text-center">{{ campaign.goals }}</td>
+                        <td class="text-center text-capitalize">{{ campaign.sponsor.name }}</td>
+                        <td class="text-center text-capitalize {{ 'text-danger' if campaign.flagged else 'text-success' }}">{{ "Flagged. Contact the admin for more details" if campaign.flagged else "Not Flagged" }}</td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center justify-content-center gap-1">
+                                <a href="/campaigns/{{ campaign.id }}">
+                                    <ion-icon
+                                            name="create-outline"
+                                            style="font-size: 24px;"
+                                            class="btn btn-outline-primary"
+                                    ></ion-icon>
+                                </a>
+                                <a href="/campaigns/{{ campaign.id }}/delete">
+                                    <ion-icon
+                                            name="trash-outline"
+                                            style="font-size: 24px;"
+                                            class="btn btn-outline-danger"
+                                    ></ion-icon>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-  {% endif %}
-</section>
+        {% endif %}
+    </section>
 {% endblock %}

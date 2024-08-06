@@ -86,9 +86,8 @@ def create_advertisement():
         influencer = (
             request.args["influencer"] if "influencer" in request.args else None
         )
-        print(influencer)
         influencers = Influencers.Influencer.query.all()
-        campaigns = Campaigns.Campaign.query.filter_by(sponsor_id=current_user.id).all()
+        campaigns = Campaigns.Campaign.query.filter_by(sponsor_id=current_user.id).filter_by(flagged=False).all()
         return render_template(
             "sponsor/advertisements/create.html.jinja",
             role="sponsor",
